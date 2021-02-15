@@ -19,6 +19,8 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-mocha": "^8.0.0",
+    "form-data": "^3.0.0",
+    "fs": "0.0.1-security",
     "mocha": "^8.2.1",
     "node-fetch": "^2.6.1",
     "playwright": "^1.8.1",
