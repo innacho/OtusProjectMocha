@@ -1,10 +1,13 @@
 const adminAccountID = '60212468988758006877a1a6';
 export { adminAccountID };
 
+const attachData = 'attachment.jpg';
+export { attachData };
+
 const attachID = '10000';
 export { attachID };
 
-const authData = 'chonkainna@mail.ru:pFZPldBM5GCPCjldw7wMD3E7';
+const authData = 'chonkainna@mail.ru:8yOdkMNN4C1r3xfEanyX9634';
 export { authData };
 
 const componentName = 'Component 1';

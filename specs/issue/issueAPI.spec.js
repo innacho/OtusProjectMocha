@@ -1,6 +1,6 @@
 import chai from 'chai';
-import { apiIssueProvider } from '../../framework';
-import { assignIssueData, commentIssueData, editIssueData } from '../../framework/config';
+import { apiAttachProvider, apiIssueProvider } from '../../framework';
+import { assignIssueData, attachData, commentIssueData, editIssueData } from '../../framework/config';
 
 const { expect } = chai;
 
@@ -115,9 +115,48 @@ it('Add attachment', async () => {
   const b = await r.json();
 
   const res = await apiIssueProvider().addAttachment().post(b.id);
-  const err = await res.text();
-  console.log(err);
   expect(res.status).to.equal(200);
+
+  const body = await res.json();
+  expect(body[0].filename).to.equal(attachData);
+
+  await apiIssueProvider().deleteIssue().delete(b.id);
+});
+
+it('Get attachment data', async () => {
+  const r = await apiIssueProvider().createIssue().post();
+  expect(r.status).to.equal(201);
+  const b = await r.json();
+
+  const res = await apiIssueProvider().addAttachment().post(b.id);
+  expect(res.status).to.equal(200);
+
+  const body = await res.json();
+  expect(body[0].filename).to.equal(attachData);
+
+  const r2 = await apiAttachProvider().getAttachmentMetadata().get(body[0].id);
+  expect(r2.status).to.equal(200);
+
+  const body2 = await r2.json();
+  expect(body2.id).to.contain((body[0].id).toString);
+  expect(body2.filename).to.equal(attachData);
+
+  await apiIssueProvider().deleteIssue().delete(b.id);
+});
+
+it('Delete attachment', async () => {
+  const r = await apiIssueProvider().createIssue().post();
+  expect(r.status).to.equal(201);
+  const b = await r.json();
+
+  const res = await apiIssueProvider().addAttachment().post(b.id);
+  expect(res.status).to.equal(200);
+
+  const body = await res.json();
+  expect(body[0].filename).to.equal(attachData);
+
+  const r2 = await apiAttachProvider().deleteAttachment().delete(body[0].id);
+  expect(r2.status).to.equal(204);
 
   await apiIssueProvider().deleteIssue().delete(b.id);
 });
