@@ -7,6 +7,6 @@ require:
 reporter: 'spec'
 slow: 75
 sort: false
-spec: 'specs/**/*API.spec.js' # the positional arguments!
+spec: 'specs/**/issueAPI.spec.js' # the positional arguments!
 timeout: false # same as "no-timeout: true" or "timeout: 0"
 ui: 'bdd'
