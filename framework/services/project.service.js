@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { projectKey, urls } from '../config';
-import { token } from '../bulder';
+import { authData, projectKey, urls } from '../config';
+import { createToken } from '../bulder';
 
 const GetProject = function GetProject() {
   this.get = async function get() {
@@ -8,7 +8,7 @@ const GetProject = function GetProject() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -24,7 +24,7 @@ const GetProjectComponents = function GetProjectComponents() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });

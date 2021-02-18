@@ -1,7 +1,8 @@
 import fetch from 'node-fetch';
-import { token, formData } from '../bulder';
+import { formData, createToken } from '../bulder';
+
 import {
-  assignIssueData, commentIssueData, editIssueData,
+  assignIssueData, authData, commentIssueData, editIssueData,
   issueData, subtaskData, transitionIssueData, urls,
 } from '../config';
 
@@ -11,7 +12,7 @@ const AddAttachment = function AddAttachment() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'X-Atlassian-Token': 'no-check',
       },
@@ -28,7 +29,7 @@ const AssignIssue = function AssignIssue() {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -45,7 +46,7 @@ const CommentIssue = function CommentIssue() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -62,7 +63,7 @@ const CreateIssue = function CreateIssue() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -73,6 +74,23 @@ const CreateIssue = function CreateIssue() {
 };
 export { CreateIssue };
 
+const CreateIssueWithParams = function CreateIssueWithParams() {
+  this.post = async function post(tokenParams, issueDataParams) {
+    const url = `${urls.atlassianPrivate}/rest/api/2/issue`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        Authorization: createToken(tokenParams),
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(issueDataParams),
+    });
+    return response;
+  };
+};
+export { CreateIssueWithParams };
+
 const CreateSubtask = function CreateSubtask() {
   this.post = async function post(parentId) {
     const url = `${urls.atlassianPrivate}/rest/api/2/issue`;
@@ -80,7 +98,7 @@ const CreateSubtask = function CreateSubtask() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -97,7 +115,7 @@ const DeleteIssue = function DeleteIssue() {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
       },
     });
     return response;
@@ -111,7 +129,7 @@ const EditIssue = function EditIssue() {
     const response = await fetch(url, {
       method: 'PUT',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -128,7 +146,7 @@ const GetIssue = function GetIssue() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -144,7 +162,7 @@ const GetIssueTransitions = function GetIssueTransitions() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -160,7 +178,7 @@ const TransitionIssue = function TransitionIssue() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },

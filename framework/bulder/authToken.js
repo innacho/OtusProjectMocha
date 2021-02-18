@@ -1,5 +1,3 @@
-import { authData } from '../config';
+const createToken = (authData) => `Basic ${Buffer.from(authData).toString('base64')}`;
 
-const token = `Basic ${Buffer.from(authData).toString('base64')}`;
-
-export { token };
+export { createToken };

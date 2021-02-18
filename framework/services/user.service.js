@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { token } from '../bulder';
-import { userData, urls } from '../config';
+import { createToken } from '../bulder';
+import { userData, urls, authData } from '../config';
 
 const CreateUser = function CreateUser() {
   this.post = async function post() {
@@ -8,7 +8,7 @@ const CreateUser = function CreateUser() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
@@ -26,7 +26,7 @@ const GetAllUsers = function GetAllUsers() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -42,7 +42,7 @@ const GetCurrentUser = function GetCurrentUser() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -58,7 +58,7 @@ const GetAllPermissions = function GetAllPermissions() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -74,7 +74,7 @@ const GetMyPermissions = function GetMyPermissions() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
