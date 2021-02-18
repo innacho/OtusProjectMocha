@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { urls } from '../config';
-import { token } from '../bulder';
+import { authData, urls } from '../config';
+import { createToken } from '../bulder';
 
 const GetAttachmentMetadata = function GetAttachmentMetadata() {
   this.get = async function get(attachID) {
@@ -8,7 +8,7 @@ const GetAttachmentMetadata = function GetAttachmentMetadata() {
     const response = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
       },
     });
@@ -24,7 +24,7 @@ const DeleteAttachment = function DeleteAttachment() {
     const response = await fetch(url, {
       method: 'DELETE',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
       },
     });
     return response;

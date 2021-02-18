@@ -1,7 +1,8 @@
 import {
   AddAttachment, AssignIssue, CommentIssue, CreateComponent, CreateIssue,
-  CreateSubtask, CreateUser, DeleteAttachment, DeleteIssue, EditIssue, GetAllPermissions,
-  GetAllUsers, GetAttachmentMetadata, GetCurrentUser, GetIssue, GetIssueTransitions,
+  CreateSubtask, CreateUser, DeleteAttachment, DeleteIssue, CreateIssueWithParams,
+  EditIssue, GetAllPermissions, GetAllUsers, GetAttachmentMetadata, GetCurrentUser,
+  GetIssue, GetIssueTransitions,
   GetMyPermissions, GetProject, GetProjectComponents, TransitionIssue,
 } from './services/index';
 
@@ -17,6 +18,7 @@ const apiIssueProvider = () => ({
   assignIssue: () => new AssignIssue(),
   commentIssue: () => new CommentIssue(),
   createIssue: () => new CreateIssue(),
+  CreateIssueWithParams: () => new CreateIssueWithParams(),
   createSubtask: () => new CreateSubtask(),
   deleteIssue: () => new DeleteIssue(),
   editIssue: () => new EditIssue(),

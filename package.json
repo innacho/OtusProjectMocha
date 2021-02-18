@@ -22,6 +22,7 @@
     "form-data": "^3.0.0",
     "fs": "0.0.1-security",
     "mocha": "^8.2.1",
+    "mocha-param": "^2.0.1",
     "node-fetch": "^2.6.1",
     "playwright": "^1.8.1",
     "supertest": "^6.1.3"

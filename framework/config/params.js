@@ -13,6 +13,9 @@ export { authData };
 const componentName = 'Component 1';
 export { componentName };
 
+const incorrectAuthData = 'chonkainna@mail.ru:8yOdkMNN4C1r3xfEanyX963';
+export { incorrectAuthData };
+
 const issueID = '10001';
 export { issueID };
 
@@ -24,6 +27,9 @@ export { projectKey };
 
 const userAccountID = '5f367923e11542004654ea82';
 export { userAccountID };
+
+const wrongUserAuthData = 'fedorovainna@rambler.ru:0KO0X860OhuS8VfqGqmXE700';
+export { wrongUserAuthData };
 
 const adminData = {
   displayName: 'Inna',
@@ -114,6 +120,31 @@ const issueData = {
   },
 };
 export { issueData };
+
+const issueDataNoField = {
+  fields: {
+    summary: 'Test issue summary',
+    components: [
+      {
+        id: '10001',
+      },
+    ],
+    project: {
+      id: projectID,
+    },
+    description: 'Issue test description',
+    reporter: {
+      id: adminAccountID,
+    },
+    labels: [
+      'test_label2',
+    ],
+    assignee: {
+      id: userAccountID,
+    },
+  },
+};
+export { issueDataNoField };
 
 const subtaskData = {
   fields: {

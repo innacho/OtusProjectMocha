@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
-import { urls, componentData } from '../config';
-import { token } from '../bulder';
+import { urls, componentData, authData } from '../config';
+import { createToken } from '../bulder';
 
 const CreateComponent = function CreateComponent() {
   this.post = async function post() {
@@ -8,7 +8,7 @@ const CreateComponent = function CreateComponent() {
     const response = await fetch(url, {
       method: 'POST',
       headers: {
-        Authorization: token,
+        Authorization: createToken(authData),
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },

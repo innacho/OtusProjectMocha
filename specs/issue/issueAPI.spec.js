@@ -1,162 +1,130 @@
 import chai from 'chai';
-import { apiAttachProvider, apiIssueProvider } from '../../framework';
-import { assignIssueData, attachData, commentIssueData, editIssueData } from '../../framework/config';
+import itParam from 'mocha-param';
+import * as api from '../../framework';
+import * as data from '../../framework/config';
 
 const { expect } = chai;
 
-it.skip('Create issue', async () => {
-  const response = await apiIssueProvider().createIssue().post();
-  expect(response.status).to.equal(201);
-  expect(response.statusText).to.equal('Created');
-  const body = await response.json();
-  const res = await apiIssueProvider().deleteIssue().delete(body.id);
-  expect(res.status).to.equal(204);
+describe('Jira issue api endpoint critical tests', () => {
+  it('Create issue', async () => {
+    const response = await api.apiIssueProvider().createIssue().post();
+    expect(response.status).to.equal(201);
+    expect(response.statusText).to.equal('Created');
+    const body = await response.json();
+    await api.apiIssueProvider().deleteIssue().delete(body.id);
+  });
+
+  it('Delete issue', async () => {
+    const r = await api.apiIssueProvider().createIssue().post();
+    const b = await r.json();
+    const response = await api.apiIssueProvider().deleteIssue().delete(b.id);
+    expect(response.status).to.equal(204);
+  });
 });
 
-it.skip('Create subtask', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  const b = await r.json();
-  const response = await apiIssueProvider().createSubtask().post(b.id);
-  expect(response.status).to.equal(201);
-  expect(response.statusText).to.equal('Created');
-  const body = await response.json();
-  await apiIssueProvider().deleteIssue().delete(body.id);
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
+describe('Jira issue api endpoint tests', () => {
+  let currentIssueId;
+  let body = {};
 
-it.skip('Get issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  const b = await r.json();
-  const response = await apiIssueProvider().getIssue().get(b.id);
-  expect(response.status).to.equal(200);
-  const body = await response.json();
-  expect(body.id).to.equal(b.id);
-  await apiIssueProvider().deleteIssue().delete(body.id);
-});
+  beforeEach(async () => {
+    const r = await api.apiIssueProvider().createIssue().post();
+    body = await r.json();
+    currentIssueId = body.id;
+  });
 
-it.skip('Delete issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  const b = await r.json();
-  const response = await apiIssueProvider().deleteIssue().delete(b.id);
-  expect(response.status).to.equal(204);
-});
+  afterEach(async () => {
+    const res = await api.apiIssueProvider().deleteIssue().delete(currentIssueId);
+    expect(res.status).to.equal(204);
+  });
 
-it.skip('Get issue transitions', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  const b = await r.json();
-  const response = await apiIssueProvider().getIssueTransitions().get(b.id);
-  expect(response.status).to.equal(200);
-  const body = await response.json();
-  expect(body.transitions[0].id).to.equal('11');
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
+  it.skip('Create subtask', async () => {
+    const response = await api.apiIssueProvider().createSubtask().post(currentIssueId);
+    expect(response.status).to.equal(201);
+    expect(response.statusText).to.equal('Created');
+    const b = await response.json();
+    await api.apiIssueProvider().deleteIssue().delete(b.id);
+  });
 
-it.skip('Edit issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
+  it.skip('Get issue', async () => {
+    const response = await api.apiIssueProvider().getIssue().get(currentIssueId);
+    expect(response.status).to.equal(200);
+    const b = await response.json();
+    expect(currentIssueId).to.equal(b.id);
+  });
 
-  const res = await apiIssueProvider().editIssue().put(b.id);
-  expect(res.status).to.equal(204);
+  it.skip('Get issue transitions', async () => {
+    const response = await api.apiIssueProvider().getIssueTransitions().get(currentIssueId);
+    expect(response.status).to.equal(200);
+    const b = await response.json();
+    expect(b.transitions[0].id).to.equal('11');
+  });
 
-  const response = await apiIssueProvider().getIssue().get(b.id);
-  expect(response.status).to.equal(200);
-  const body = await response.json();
-  expect(body.fields.description).to.equal(editIssueData.update.description[0].set);
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
+  it.skip('Edit issue', async () => {
+    const res = await api.apiIssueProvider().editIssue().put(currentIssueId);
+    expect(res.status).to.equal(204);
+    const response = await api.apiIssueProvider().getIssue().get(currentIssueId);
+    const b = await response.json();
+    expect(b.fields.description).to.equal(data.editIssueData.update.description[0].set);
+  });
 
-it.skip('Comment issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
+  it.skip('Add attachment', async () => {
+    const res = await api.apiIssueProvider().addAttachment().post(currentIssueId);
+    expect(res.status).to.equal(200);
+    const b = await res.json();
+    expect(b[0].filename).to.equal(data.attachData);
+  });
 
-  const res = await apiIssueProvider().commentIssue().post(b.id);
-  expect(res.status).to.equal(201);
-  const body = await res.json();
-  expect(body.body).to.equal(commentIssueData.body);
+  it.skip('Comment issue', async () => {
+    const res = await api.apiIssueProvider().commentIssue().post(currentIssueId);
+    expect(res.status).to.equal(201);
+    const b = await res.json();
+    expect(b.body).to.equal(data.commentIssueData.body);
+  });
 
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
+  it.skip('Transition issue', async () => {
+    const res = await api.apiIssueProvider().transitionIssue().post(currentIssueId);
+    expect(res.status).to.equal(204);
+    const response = await api.apiIssueProvider().getIssue().get(currentIssueId);
+    const b = await response.json();
+    expect(b.fields.status.id).to.equal('3');
+  });
 
-it.skip('Transition issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
+  it.skip('Assign issue', async () => {
+    const res = await api.apiIssueProvider().assignIssue().put(currentIssueId);
+    expect(res.status).to.equal(204);
+    const response = await api.apiIssueProvider().getIssue().get(currentIssueId);
+    const b = await response.json();
+    expect(b.fields.assignee.accountId).to.equal(data.assignIssueData.accountId);
+  });
 
-  const res = await apiIssueProvider().transitionIssue().post(b.id);
-  expect(res.status).to.equal(204);
+  it.skip('Get attachment data', async () => {
+    const res = await api.apiIssueProvider().addAttachment().post(currentIssueId);
+    const b = await res.json();
+    const res2 = await api.apiAttachProvider().getAttachmentMetadata().get(b[0].id);
+    expect(res2.status).to.equal(200);
+    const b2 = await res2.json();
+    expect(b2.id).to.contain((b[0].id).toString);
+    expect(b2.filename).to.equal(data.attachData);
+  });
 
-  const response = await apiIssueProvider().getIssue().get(b.id);
-  expect(response.status).to.equal(200);
-  const body = await response.json();
-  expect(body.fields.status.id).to.equal('3');
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
+  it.skip('Delete attachment', async () => {
+    const res = await api.apiIssueProvider().addAttachment().post(currentIssueId);
+    const b = await res.json();
+    const res2 = await api.apiAttachProvider().deleteAttachment().delete(b[0].id);
+    expect(res2.status).to.equal(204);
+  });
 
-it.skip('Assign issue', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
+  const tests = [
+    { name: 'incorrect credentials', auth: data.incorrectAuthData, issueBody: data.issueData, expected: 401 },
+    { name: 'user without permission', auth: data.wrongUserAuthData, issueBody: data.issueData, expected: 403 },
+    { name: 'request missing required fields', auth: data.authData, issueBody: data.issueDataNoField, expected: 400 },
+  ];
 
-  const res = await apiIssueProvider().assignIssue().put(b.id);
-  expect(res.status).to.equal(204);
-
-  const response = await apiIssueProvider().getIssue().get(b.id);
-  expect(response.status).to.equal(200);
-  const body = await response.json();
-  expect(body.fields.assignee.accountId).to.equal(assignIssueData.accountId);
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
-
-it('Add attachment', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
-
-  const res = await apiIssueProvider().addAttachment().post(b.id);
-  expect(res.status).to.equal(200);
-
-  const body = await res.json();
-  expect(body[0].filename).to.equal(attachData);
-
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
-
-it('Get attachment data', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
-
-  const res = await apiIssueProvider().addAttachment().post(b.id);
-  expect(res.status).to.equal(200);
-
-  const body = await res.json();
-  expect(body[0].filename).to.equal(attachData);
-
-  const r2 = await apiAttachProvider().getAttachmentMetadata().get(body[0].id);
-  expect(r2.status).to.equal(200);
-
-  const body2 = await r2.json();
-  expect(body2.id).to.contain((body[0].id).toString);
-  expect(body2.filename).to.equal(attachData);
-
-  await apiIssueProvider().deleteIssue().delete(b.id);
-});
-
-it('Delete attachment', async () => {
-  const r = await apiIssueProvider().createIssue().post();
-  expect(r.status).to.equal(201);
-  const b = await r.json();
-
-  const res = await apiIssueProvider().addAttachment().post(b.id);
-  expect(res.status).to.equal(200);
-
-  const body = await res.json();
-  expect(body[0].filename).to.equal(attachData);
-
-  const r2 = await apiAttachProvider().deleteAttachment().delete(body[0].id);
-  expect(r2.status).to.equal(204);
-
-  await apiIssueProvider().deleteIssue().delete(b.id);
+  describe('Create issue parametric test', function () {
+    itParam('Creating issue for ${value.name}', tests, async function (test) {
+      {
+      const response = await api.apiIssueProvider().CreateIssueWithParams().post(test.auth, test.issueBody);
+      expect(response.status).to.equal(test.expected);}
+    });
+  });
 });
